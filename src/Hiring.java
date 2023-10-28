@@ -35,14 +35,15 @@ public class Hiring {
     if (candidatesLeft.size() == 0){
       throw new IllegalStateException("candidatesLeft array is empty!");
     }
-    int index = 0;
-    //how to check which
-    CandidateList dummyList = new CandidateList(currentHires);
+    //set up the maxCandidate variable by getting the first candidate and
     Candidate maxCandidate = candidatesLeft.get(0);
-    int maxHoursCovered = dummyList.withCandidate(candidatesLeft.get(0)).numCoveredHours();
+    int maxHoursCovered = currentHires.withCandidate(candidatesLeft.get(0)).numCoveredHours();
     for (int i = 1; i < candidatesLeft.size(); i++){
+      //get the current candidate in the candidate array
       Candidate curCandidate = candidatesLeft.get(i);
-      int hoursCovered = dummyList.withCandidate(curCandidate).numCoveredHours();
+      //calculate the TOTAL number of hours that will be covered with this candidate and the previously hired candidates
+      int hoursCovered = currentHires.withCandidate(curCandidate).numCoveredHours();
+      //set maxCandidate variable if number of hours is more than the max
       if (hoursCovered > maxHoursCovered){
         maxHoursCovered = hoursCovered;
         maxCandidate = curCandidate;
@@ -52,16 +53,32 @@ public class Hiring {
   }
 
 
-  public static CandidateList minCoverageHiring(CandidateList candidates,
-      CandidateList hired,
-      int minHours){
+  public static CandidateList minCoverageHiring(CandidateList candidates, CandidateList hired, int minHours){
       return null;
   }
 
-  public static CandidateList optimalHiring(CandidateList candidates,
-      CandidateList hired,
-      int hiresLeft){
-      return null;
+  public static CandidateList optimalHiring(CandidateList candidates, CandidateList hired, int hiresLeft){
+      if (hiresLeft == 0){
+        return hired;
+      }
+
+      CandidateList maxHoursCandidateList = null;
+      for (int i = 0; i < candidates.size(); i++){
+        //get current candidate
+        Candidate currentCandidate = candidates.get(i);
+        //remove candidate from candidates and add them
+        candidates.remove(currentCandidate);
+        hired.add(currentCandidate);
+        //get the new candidate list recursivley
+        CandidateList newList = optimalHiring(candidates, hired, hiresLeft-1);
+        if (maxHoursCandidateList == null || maxHoursCandidateList.numCoveredHours() < newList.numCoveredHours()){
+          maxHoursCandidateList = newList.deepCopy();
+        }
+        //add back the candidate to the candidate list and remove it from the hired list
+        hired.remove(currentCandidate);
+        candidates.add(i, currentCandidate);
+      }
+      return maxHoursCandidateList;
   }
 
 }

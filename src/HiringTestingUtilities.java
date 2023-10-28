@@ -108,7 +108,9 @@ public class HiringTestingUtilities {
    */
   public static boolean compareCandidateLists(CandidateList expected, CandidateList actual) {
     ArrayList<CandidateList> lists = new ArrayList<>(1);
-    lists.add(expected);
+    if (expected != null) {
+      lists.add(expected);
+    }
     return compareCandidateLists(lists, actual);
   }
 
@@ -140,18 +142,17 @@ public class HiringTestingUtilities {
       return false;
     }
 
-
     // Build some output. If we don't find a match, then we will print it.
     StringBuilder diffOutput = new StringBuilder();
 
-    if (expectedLists.size() > 1) {
-      diffOutput.append("Comparing actual against ").append(expectedLists.size())
-          .append(" expected lists.");
-    }
+    diffOutput.append("Comparing actual against ")
+        .append(expectedLists.size())
+        .append(" expected lists.\n");
 
     // Sort by the candidate ID.
     actual.sort(Comparator.comparing(Candidate::getId));
 
+    // Return true if the actual list matches ANY of the expected lists.
     for (CandidateList expected : expectedLists) {
       // Sort by the candidate ID.
       expected.sort(Comparator.comparing(Candidate::getId));
@@ -164,18 +165,24 @@ public class HiringTestingUtilities {
         continue;
       }
 
+      boolean matchesExpected = true;
+
       // Compare element-wise.
       for (int c = 0; c < expected.size(); ++c) {
         if (!expected.get(c).equals(actual.get(c))) {
-          diffOutput.append("Candidates differ.");
-          diffOutput.append("Expected: ").append(expected.get(c)).append(" in ").append(expected);
-          diffOutput.append("Actual:   ").append(actual.get(c)).append(" in ").append(actual);
-          diffOutput.append("Ending comparison early.");
+          // The lists don't match. End the comparison and move to the next possible expected list.
+          diffOutput.append("Candidates differ.\n");
+          diffOutput.append("Expected: ").append(expected.get(c)).append(" in ").append(expected).append("\n");
+          diffOutput.append("Actual:   ").append(actual.get(c)).append(" in ").append(actual).append("\n");
+          matchesExpected = false;
+          break;
         }
       }
 
-      // The lists match! Return without printing anything.
-      return true;
+      if (matchesExpected) {
+        // The lists match! Return without printing anything.
+        return true;
+      }
     }
 
     // None of the lists matched. Print and return false.
