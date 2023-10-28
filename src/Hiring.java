@@ -1,18 +1,32 @@
 public class Hiring {
 
-  public static CandidateList greedyHiring(CandidateList candidates, CandidateList hired, int hiresLeft, int iter){
+  public static CandidateList greedyHiring(CandidateList candidates, CandidateList hired, int hiresLeft) {
+    return greedyHiring(candidates, hired, hiresLeft, 1);
+  }
+
+
+  private static CandidateList greedyHiring(CandidateList candidates, CandidateList hired, int hiresLeft, int iter){
+    //debug
     System.out.println("---------------------Iteration: "+iter+"-----------------------------");
     System.out.println("Candidates: ");
     HiringTesting.printCandidateList(candidates);
     System.out.print("Hiring: ");
     HiringTesting.printCandidateList(hired);
-    if (hired.size() == hiresLeft){
+
+    //if we have reached the number of hires, return the current candidates
+    if (0 == hiresLeft){
       return candidates;
     }
+    //find the candidate which will increase the total amount of hours the most
     Candidate max = getCandidateWithMaxHours(candidates, hired);
-    hired.add(max);
-    candidates.remove(max);
-    return greedyHiring(candidates, hired, hiresLeft, iter+1);
+
+    System.out.println("Max Candidate: "+max);
+    CandidateList hired2 = new CandidateList(hired);
+    CandidateList candidates2 = new CandidateList(candidates);
+    hired2.add(max);
+    candidates2.remove(max);
+    hired.addAll(greedyHiring(candidates2, hired2, hiresLeft-1, iter+1));
+    return hired;
   }
 
   private static Candidate getCandidateWithMaxHours(CandidateList candidatesLeft, CandidateList currentHires) throws IllegalStateException{

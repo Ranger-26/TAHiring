@@ -13,9 +13,9 @@ public class HiringTesting {
         });
     printCandidateList(testingList);
     CandidateList expectedList = new CandidateList();
+    expectedList.add(testingList.get(0));
     expectedList.add(testingList.get(1));
-    expectedList.add(testingList.get(2));
-    CandidateList actual = Hiring.greedyHiring(testingList, new CandidateList(), 2, 1);
+    CandidateList actual = Hiring.greedyHiring(testingList, new CandidateList(), 2);
     printCandidateList(actual);
     printCandidateList(expectedList);
 
@@ -32,6 +32,9 @@ public class HiringTesting {
   public static void main(String[] args){
     if (!greedyHiringRecursiveTest()){
       System.out.println("ERROR: EXPECTED AND ACTUAL ARRAY DONT MATCH FOR greedyHiringRecursiveTest!");
+    }
+    else{
+      System.out.println("PASS!");
     }
   }
 }
