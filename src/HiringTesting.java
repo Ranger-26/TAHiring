@@ -86,6 +86,10 @@ public class HiringTesting {
     return false;
   }
 
+  public static boolean minCoverageHiringBaseTest(){return false;}
+  public static boolean minCoverageHiringRecursiveTest(){return false;}
+  public static boolean minCoverageHiringFuzzTest(){return false;}
+
   public static void main(String[] args){
     if (!greedyHiringRecursiveTest()){
       System.out.println("FAIL greedyHiringRecursiveTest!");

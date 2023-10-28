@@ -54,6 +54,8 @@ public class Hiring {
 
 
   public static CandidateList minCoverageHiring(CandidateList candidates, CandidateList hired, int minHours){
+      //find all sets of Tas that cover the desired hours
+      //find the set that has the minimum cost from the original set
       return null;
   }
 
