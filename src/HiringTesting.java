@@ -44,36 +44,22 @@ public class HiringTesting {
     System.out.println();
   }
 
-  public static void main(String[] args){
-//    if (!greedyHiringRecursiveTest()){
-//      System.out.println("ERROR: EXPECTED AND ACTUAL ARRAY DONT MATCH FOR greedyHiringRecursiveTest!");
-//    }
-//    else{
-//      System.out.println("PASS greedyHiringRecursiveTest!");
-//    }
-//    if (!greedyHiringBaseTest()){
-//      System.out.println("ERROR: EXPECTED AND ACTUAL ARRAY DONT MATCH FOR greedyHiringBaseTest!");
-//    }
-//    else {
-//      System.out.println("PASS greedyHiringBaseTest!");
-//    }
-    optimalHiringRecursiveTest();
-  }
-
   public static boolean optimalHiringBaseTest(){
     return false;
   }
   public static boolean optimalHiringRecursiveTest(){
     CandidateList testingList = HiringTestingUtilities.makeCandidateList(new boolean[][]
         {
-            {false, false, true, true, true, true},
+            {true, false, false, true, true, true},
             {true, true, false, false, true, false},
-            {false, false, false, true, false, true}
+            {false, false, true, true, false, false},
+            {true, false, true, false, false, true},
+            {false, true, false, true, true, false},
         });
     printCandidateList(testingList);
     CandidateList expectedList = new CandidateList();
-    expectedList.add(testingList.get(1));
-    expectedList.add(testingList.get(2));
+    expectedList.add(testingList.get(3));
+    expectedList.add(testingList.get(4));
     CandidateList actual = Hiring.optimalHiring(testingList, new CandidateList(), 2);
     System.out.println("------------END----------------");
     printCandidateList(actual);
@@ -81,5 +67,33 @@ public class HiringTesting {
 
     return HiringTestingUtilities.compareCandidateLists(expectedList,actual);
   }
-  public static boolean optimalHiringFuzzTest(){return false;}
+
+  public static boolean optimalHiringFuzzTest(){
+    return false;
+  }
+
+  public static void main(String[] args){
+    if (!greedyHiringRecursiveTest()){
+      System.out.println("FAIL greedyHiringRecursiveTest!");
+    }
+    else{
+      System.out.println("PASS greedyHiringRecursiveTest!");
+    }
+
+    if (!greedyHiringBaseTest()){
+      System.out.println("FAIL greedyHiringBaseTest!");
+    }
+    else {
+      System.out.println("PASS greedyHiringBaseTest!");
+    }
+
+    if (optimalHiringRecursiveTest()){
+      System.out.println("PASS optimalHiringRecursiveTest!");
+    }else{
+      System.out.println("FAIL optimalHiringRecursiveTest!");
+
+    }
+  }
+
+
 }
