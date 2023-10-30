@@ -64,6 +64,7 @@ public class Hiring {
         return hired;
       }
 
+      //set the maxCandidate list to a blank candidateList
       CandidateList maxHoursCandidateList = null;
       for (int i = 0; i < candidates.size(); i++){
         //get current candidate
@@ -80,7 +81,9 @@ public class Hiring {
         hired.remove(currentCandidate);
         candidates.add(i, currentCandidate);
       }
-      return maxHoursCandidateList;
-  }
 
+      if (maxHoursCandidateList != null)
+        return maxHoursCandidateList;
+    return new CandidateList();
+  }
 }

@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Random;
+
 public class HiringTesting {
 
   public static boolean greedyHiringBaseTest(){
@@ -70,20 +73,42 @@ public class HiringTesting {
         });
     printCandidateList(testingList);
     CandidateList expectedList = new CandidateList();
-    expectedList.add(testingList.get(0));
     expectedList.add(testingList.get(1));
+    expectedList.add(testingList.get(2));
     CandidateList actual = Hiring.optimalHiring(testingList, new CandidateList(), 2);
     CandidateList actual2 = Hiring.optimalHiring(new CandidateList(), new CandidateList(), 2);
 
-    System.out.println("------------END----------------");
+    System.out.println("------------END(optimal)----------------");
     printCandidateList(actual);
     printCandidateList(expectedList);
-
-    return HiringTestingUtilities.compareCandidateLists(expectedList,actual) || HiringTestingUtilities.compareCandidateLists(actual2, new CandidateList());
+    return HiringTestingUtilities.compareCandidateLists(expectedList,actual) && HiringTestingUtilities.compareCandidateLists(actual2, new CandidateList());
   }
 
   public static boolean optimalHiringFuzzTest(){
-    return false;
+    long seed = new Random().nextLong();
+    Random random = new Random(seed);
+
+    for (int i = 0; i< 200; i++) {
+      CandidateList randomCandidatesList =
+          HiringTestingUtilities.generateRandomInput(random.nextInt(1, 6), random.nextInt(1, 10));
+      int totalHires = random.nextInt(randomCandidatesList.size() > 1 ? 1:0, randomCandidatesList.size());
+      ArrayList<CandidateList> allCombinations =
+          HiringTestingUtilities.allOptimalSolutions(randomCandidatesList, totalHires);
+      CandidateList actualResult =
+          Hiring.optimalHiring(randomCandidatesList, new CandidateList(), totalHires);
+
+      if (!allCombinations.contains(actualResult)) {
+        System.out.println("ERROR: FUZZ TESTING CAUGHT A TESTCASE THAT FAILS optimalHiringTest");
+        System.out.println("Seed: "+seed+", Index: "+i);
+        System.out.println("Candidate List:" + randomCandidatesList);
+        System.out.println("Total Hires: "+totalHires);
+        System.out.println("Actual Result: "+actualResult);
+        System.out.println("Allowed Combinations: "+allCombinations);
+        System.out.println();
+        return false;
+      }
+    }
+    return true;
   }
 
   public static boolean minCoverageHiringBaseTest(){return false;}
@@ -108,19 +133,23 @@ public class HiringTesting {
     }
 
     if (optimalHiringRecursiveTest()){
-      System.out.println("FAIL optimalHiringRecursiveTest!");
-      return;
-    }else{
       System.out.println("PASS optimalHiringRecursiveTest!");
+    }else{
+      System.out.println("FAIL optimalHiringRecursiveTest!");
     }
 
     if (optimalHiringBaseTest()){
       System.out.println("PASS optimalHiringBaseTest!");
-      return;
     }else{
-      System.out.println("FAIL optimalHiringNaseTest!");
+      System.out.println("FAIL optimalHiringBaseTest!");
+    }
+
+    if (optimalHiringFuzzTest()){
+      System.out.println("PASS optimalHiringFuzzTest");
+    }
+    else{
+      System.out.println("FAIL optimalHiringFUzzTest");
     }
   }
-
 
 }
