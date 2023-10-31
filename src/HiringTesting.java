@@ -1,3 +1,4 @@
+import java.awt.event.HierarchyBoundsAdapter;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -112,8 +113,50 @@ public class HiringTesting {
   }
 
   public static boolean minCoverageHiringBaseTest(){return false;}
-  public static boolean minCoverageHiringRecursiveTest(){return false;}
-  public static boolean minCoverageHiringFuzzTest(){return false;}
+
+  public static boolean minCoverageHiringRecursiveTest(){
+    boolean[][] hours = new boolean[][]
+        {
+            {true, false, false, true, true, true},
+            {true, true, false, false, true, false},
+            {false, false, true, true, false, true}
+        };
+
+    int[] wages = {4,2,3};
+    CandidateList candidates = HiringTestingUtilities.makeCandidateList(hours, wages);
+    CandidateList expected = new CandidateList();
+    CandidateList actual = Hiring.minCoverageHiring(candidates, new CandidateList(), 4);
+    expected.add(candidates.get(0));
+    return HiringTestingUtilities.compareCandidateLists(expected, actual);
+  }
+  public static boolean minCoverageHiringFuzzTest(){
+    long seed = new Random().nextLong();
+    Random random = new Random(seed);
+
+    for (int i = 0; i< 200; i++) {
+      int numHours = random.nextInt(1, 6);
+      int numCandidates = random.nextInt(1, 10);
+      int minHours = random.nextInt(1, numHours);
+
+
+      CandidateList randomCandidatesList = HiringTestingUtilities.generateRandomInput(numHours, numCandidates, numCandidates/2);
+
+      ArrayList<CandidateList> allCombinations = HiringTestingUtilities.allMinCoverageSolutions(randomCandidatesList, minHours);
+      CandidateList actualResult = Hiring.minCoverageHiring(randomCandidatesList, new CandidateList(), minHours);
+
+      if (!allCombinations.contains(actualResult)) {
+        System.out.println("ERROR: FUZZ TESTING CAUGHT A TESTCASE THAT FAILS optimalHiringTest");
+        System.out.println("Seed: " + seed + ", Index: " + i);
+        System.out.println("Candidate List:" + randomCandidatesList);
+        System.out.println("Min Hours: " + minHours);
+        System.out.println("Actual Result: " + actualResult);
+        System.out.println("Allowed Combinations: " + allCombinations);
+        System.out.println();
+        return false;
+      }
+    }
+    return false;
+  }
 
   public static void main(String[] args){
     if (!greedyHiringRecursiveTest()){
@@ -149,6 +192,19 @@ public class HiringTesting {
     }
     else{
       System.out.println("FAIL optimalHiringFUzzTest");
+    }
+
+    if (minCoverageHiringRecursiveTest()){
+      System.out.println("PASS minCoverageHiringRecursiveTest");
+    }
+    else{
+      System.out.println("FAIL minCoverageHiringRecursiveTest");
+    }
+
+    if (minCoverageHiringFuzzTest()){
+      System.out.println("PASS minCoverageHiringFuzzTest");
+    }else {
+      System.out.println("FAIL minCoverageHiringFuzzTest");
     }
   }
 
