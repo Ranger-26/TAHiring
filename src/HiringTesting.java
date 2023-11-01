@@ -113,7 +113,18 @@ public class HiringTesting {
   }
 
   public static boolean minCoverageHiringBaseTest(){
-    return false;
+    boolean[][] hours = new boolean[][]
+        {
+            {true, false, false, true, true, true},
+            {true, true, false, false, true, false},
+            {false, false, true, true, false, true}
+        };
+    int[] wages = {4,2,3};
+    CandidateList candidates = HiringTestingUtilities.makeCandidateList(hours, wages);
+    CandidateList hired = new CandidateList();
+    hired.add(candidates.get(0));
+    CandidateList actual = Hiring.minCoverageHiring(candidates, hired, 4);
+    return HiringTestingUtilities.compareCandidateLists(actual, hired);
   }
 
   public static boolean minCoverageHiringRecursiveTest(){
@@ -209,11 +220,19 @@ public class HiringTesting {
       System.out.println("FAIL minCoverageHiringRecursiveTest");
     }
 
+    if (minCoverageHiringBaseTest()){
+      System.out.println("PASS minCoverageHiringBaseTest");
+    }else {
+      System.out.println("FAIL minCoverageHiringBaseTest");
+    }
+
     if (minCoverageHiringFuzzTest()){
       System.out.println("PASS minCoverageHiringFuzzTest");
     }else {
       System.out.println("FAIL minCoverageHiringFuzzTest");
     }
+
+
   }
 
 }
