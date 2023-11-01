@@ -112,7 +112,9 @@ public class HiringTesting {
     return true;
   }
 
-  public static boolean minCoverageHiringBaseTest(){return false;}
+  public static boolean minCoverageHiringBaseTest(){
+    return false;
+  }
 
   public static boolean minCoverageHiringRecursiveTest(){
     boolean[][] hours = new boolean[][]
@@ -129,22 +131,28 @@ public class HiringTesting {
     expected.add(candidates.get(0));
     return HiringTestingUtilities.compareCandidateLists(expected, actual);
   }
+
   public static boolean minCoverageHiringFuzzTest(){
     long seed = new Random().nextLong();
     Random random = new Random(seed);
 
-    for (int i = 0; i< 200; i++) {
+    for (int i = 0; i< 500; i++) {
+      //generate random parameters
       int numHours = random.nextInt(1, 6);
       int numCandidates = random.nextInt(1, 10);
-      int minHours = random.nextInt(1, numHours);
+      int minHours = random.nextInt(1, numHours > 1 ? numHours : 2);
+      int maxPayRate = numCandidates/2;
+      if (numCandidates/2 <= 1){
+        maxPayRate =2;
+      }
+      //generate random candidate list with the generated parameters
+      CandidateList randomCandidatesList = HiringTestingUtilities.generateRandomInput(numHours, numCandidates, maxPayRate);
 
-
-      CandidateList randomCandidatesList = HiringTestingUtilities.generateRandomInput(numHours, numCandidates, numCandidates/2);
-
+      //get all possible minimum combinations and compare against my implementation
       ArrayList<CandidateList> allCombinations = HiringTestingUtilities.allMinCoverageSolutions(randomCandidatesList, minHours);
       CandidateList actualResult = Hiring.minCoverageHiring(randomCandidatesList, new CandidateList(), minHours);
-
-      if (!allCombinations.contains(actualResult)) {
+      //print out error message with useful info if any fuzz test fails
+      if (!allCombinations.contains(actualResult) && !(actualResult == null && allCombinations.size() == 0)) {
         System.out.println("ERROR: FUZZ TESTING CAUGHT A TESTCASE THAT FAILS optimalHiringTest");
         System.out.println("Seed: " + seed + ", Index: " + i);
         System.out.println("Candidate List:" + randomCandidatesList);
@@ -155,7 +163,7 @@ public class HiringTesting {
         return false;
       }
     }
-    return false;
+    return true;
   }
 
   public static void main(String[] args){
