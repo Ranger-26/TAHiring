@@ -120,6 +120,13 @@ public class Hiring {
       if (minWageCandidateList == null || minWageCandidateList.totalCost() > newList.totalCost()) {
         minWageCandidateList = newList.deepCopy();
       }
+
+      //check if a list with the same cost exceeds the number of hours of our current minimum
+      if (minWageCandidateList.totalCost() == newList.totalCost()){
+        if (minWageCandidateList.numCoveredHours() > newList.numCoveredHours()){
+          minWageCandidateList = newList.deepCopy();
+        }
+      }
     }
 
     return minWageCandidateList;

@@ -128,7 +128,7 @@ public class HiringTesting {
       CandidateList actualResult =
           Hiring.optimalHiring(randomCandidatesList, new CandidateList(), totalHires);
 
-      if (!allCombinations.contains(actualResult)) {
+      if (!HiringTestingUtilities.compareCandidateLists(allCombinations, actualResult)) {
         System.out.println("ERROR: FUZZ TESTING CAUGHT A TESTCASE THAT FAILS optimalHiringTest");
         System.out.println("Seed: "+seed+", Index: "+i);
         System.out.println("Candidate List:" + randomCandidatesList);
@@ -205,7 +205,7 @@ public class HiringTesting {
       ArrayList<CandidateList> allCombinations = HiringTestingUtilities.allMinCoverageSolutions(randomCandidatesList, minHours);
       CandidateList actualResult = Hiring.minCoverageHiring(randomCandidatesList, new CandidateList(), minHours);
       //print out error message with useful info if any fuzz test fails
-      if (!allCombinations.contains(actualResult) && !(actualResult == null && allCombinations.size() == 0)) {
+      if (!HiringTestingUtilities.compareCandidateLists(allCombinations, actualResult) && !(actualResult == null && allCombinations.size() == 0)) {
         System.out.println("ERROR: FUZZ TESTING CAUGHT A TESTCASE THAT FAILS optimalHiringTest");
         System.out.println("Seed: " + seed + ", Index: " + i);
         System.out.println("Candidate List:" + randomCandidatesList);
