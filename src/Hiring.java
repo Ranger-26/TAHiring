@@ -1,5 +1,44 @@
+//////////////// FILE HEADER (INCLUDE IN EVERY FILE) //////////////////////////
+//
+// Title:    Hiring.java
+// Course:   CS 300 Fall 2023
+//
+// Author:   Siddharth Mohan
+// Email:    mohan34@wisc.edu
+// Lecturer: Mark Mansi
+//
+//////////////////// PAIR PROGRAMMERS COMPLETE THIS SECTION ///////////////////
+//
+// Partner Name:    N/A
+// Partner Email:   N/A
+// Partner Lecturer's Name: N/A
+//
+// VERIFY THE FOLLOWING BY PLACING AN X NEXT TO EACH TRUE STATEMENT:
+//   ___ Write-up states that pair programming is allowed for this assignment.
+//   ___ We have both read and understand the course Pair Programming Policy.
+//   ___ We have registered our team prior to the team registration deadline.
+//
+///////////////////////// ALWAYS CREDIT OUTSIDE HELP //////////////////////////
+//
+// Persons:         (identify each by name and describe how they helped)
+// Online Sources:
+//
+///////////////////////////////////////////////////////////////////////////////
+
+
+/**
+ * A simple class that contains useful for solving various hiring problems.
+ */
 public class Hiring {
 
+  /**
+   * Given a set of `candidates` that we can hire, a list of candidates we've already hired, and a maximum number of tas to hire, return the
+   * set of hires made using a greedy strategy that always chooses the candidate that increases hours covered the most.
+   * @param candidates  The set of available candidates to hire from (excluding those already hired).
+   * @param hired The list of those currently hired.
+   * @param hiresLeft The maximum number of candidates to hire.
+   * @return A list of hired candidates.
+   */
   public static CandidateList greedyHiring(CandidateList candidates, CandidateList hired,
       int hiresLeft) {
 
@@ -14,6 +53,13 @@ public class Hiring {
     return greedyHiring(candidates.withoutCandidate(max), hired.withCandidate(max), hiresLeft - 1);
   }
 
+  /**
+   * Gets the candidate that will maximize the total amount of hours given an array of people currently hire.
+   * @param candidatesLeft The candidates to choose from. Size should not be 0.
+   * @param currentHires The candidates that are already hired.
+   * @return The candidate that will maximize the total amount of hours in a CandidateArray
+   * @throws IllegalStateException If there are zero candidates in the candidatesArray.
+   */
   private static Candidate getCandidateWithMaxHours(CandidateList candidatesLeft,
       CandidateList currentHires) throws IllegalStateException {
     if (candidatesLeft.size() == 0) {
@@ -37,6 +83,13 @@ public class Hiring {
   }
 
 
+  /**
+   * Find the minimum-budget set of hires to achieve a threshold number of hours.
+   * @param candidates The set of available candidates to hire from.
+   * @param hired The set of candidates already hired.
+   * @param minHours The minimum number of hours we want to cover total.
+   * @return A list of hired candidates.
+   */
   public static CandidateList minCoverageHiring(CandidateList candidates, CandidateList hired,
       int minHours) {
     //return if the hired people can meet the minimum hours
@@ -72,6 +125,13 @@ public class Hiring {
     return minWageCandidateList;
   }
 
+  /**
+   * Given a set of `candidates` that we can hire, a list of candidates we've already hired, and a maximum number of tas to hire, return the set of hires that maximizes number of scheduled hours.
+   * @param candidates The set of available candidates to hire from.
+   * @param hired The list of those currently hired.
+   * @param hiresLeft the maximum number of candidates to hire.
+   * @return A list of hired candidates.
+   */
   public static CandidateList optimalHiring(CandidateList candidates, CandidateList hired,
       int hiresLeft) {
     //base case
